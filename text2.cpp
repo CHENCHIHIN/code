@@ -1,19 +1,22 @@
-#include <stdio.h>
+#include<stdio.h>
+#include<string.h>
 
-int main() {
-    struct {
-        char key[20];
-        char value[20];
-    } 
-    pairs[] = {
-        {"Robot", "RL"},
-        {"sdf", "vdv"},
-        {"sad", "dfdsv"},
-        {"eff", "vsad"}
-    };
-    for (int i = 0; i < 4; i++) {
-        printf("%s:%s\n", pairs[i].key, pairs[i].value);
-    }
+char line[1024];
 
-    return 0;
+int main(){
+	FILE*a=fopen("data.txt","r");
+	while(fgets(line,sizeof(line),a)!=NULL){
+		if(strlen(line)==0)
+			continue;
+		line[strcspn(line,"\n")]='\0';
+		char*douhao=strchr(line,':');
+		if(douhao!=NULL){
+			*douhao='\0';
+			char*zhiqian=line;
+			char*zhihou=douhao+1;
+			printf("%s:",zhiqian);
+			printf("%s\n",zhihou);	
+		}
+	}
+	return 0;
 }
