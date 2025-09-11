@@ -17,6 +17,7 @@ int main(){
 			printf("%s:",zhiqian);
 			printf("%s\n",zhihou);	
 		}
+		
 	}
 	return 0;
 }
