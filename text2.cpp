@@ -27,4 +27,6 @@ int main(){
 			printf("%s:",key[i]);
 			printf("%s\n",value[i]);
 	}
+	fclose(a);
+	return 0;
 }
