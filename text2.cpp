@@ -24,8 +24,6 @@ int main(){
 		}
 	}
 	for(int i=0;i<=sum-1;i++){
-			printf("第%d个key是%s ",i+1,key[i]);
-			printf("第%d个value是%s\n",i+1,value[i]);
 			printf("%s:",key[i]);
 			printf("%s\n",value[i]);
 	}
