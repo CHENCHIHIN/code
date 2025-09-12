@@ -8,7 +8,7 @@ int sum=0;
 
 
 int main(){
-	FILE*a=fopen("a.txt","r");
+	FILE*a=fopen("data.txt","r");
 	while(fgets(line,sizeof(line),a)!=NULL){
 		if(strlen(line)==0)
 			continue;
