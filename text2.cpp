@@ -6,6 +6,7 @@ char key[100][1024]={0};
 char value[100][1024]={0};
 char n[10];
 int sum=0;
+int jishuqi=0;
 
 
 int main(){
@@ -30,11 +31,16 @@ int main(){
 		if(strcmp(n,"Quit")==0)
 			break;
 		for(int i=0;i<=sum-1;i++){
-			if(strcmp(n,key[i])==0)
+			if(strcmp(n,key[i])==0){
 				printf("value:%s\n",value[i]);
+				jishuqi=jishuqi+1;
+			}
+			else if(i==sum-1&&jishuqi==0)
+				printf("error\n");
 			else
 				continue;
 		}
+		jishuqi=0;
 	}
 	fclose(a);
 	return 0;
