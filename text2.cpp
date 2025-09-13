@@ -4,6 +4,7 @@
 char line[1024];
 char key[100][1024]={0};
 char value[100][1024]={0};
+char n[10];
 int sum=0;
 
 
@@ -23,9 +24,17 @@ int main(){
 			sum=sum+1;	
 		}
 	}
-	for(int i=0;i<=sum-1;i++){
-			printf("%s:",key[i]);
-			printf("%s\n",value[i]);
+	while(1){
+		printf("key:");
+		scanf("%s",&n);
+		if(strcmp(n,"Quit")==0)
+			break;
+		for(int i=0;i<=sum-1;i++){
+			if(strcmp(n,key[i])==0)
+				printf("value:%s\n",value[i]);
+			else
+				continue;
+		}
 	}
 	fclose(a);
 	return 0;
