@@ -2,8 +2,8 @@
 #include<string.h>
 
 char line[1024];
-char key[100][1024]={0};
-char value[100][1024]={0};
+char key[100][1024];
+char value[100][1024];
 char n[10];
 int sum=0;
 int jishuqi=0;
@@ -18,10 +18,8 @@ int main(){
 		char*douhao=strchr(line,':');
 		if(douhao!=NULL){
 			*douhao='\0';
-			char*zhiqian=line;
-			char*zhihou=douhao+1;
-			strcpy(key[sum],zhiqian);
-			strcpy(value[sum],zhihou);
+			strcpy(key[sum],line);
+			strcpy(value[sum],douhao+1);
 			sum=sum+1;	
 		}
 	}
