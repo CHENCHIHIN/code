@@ -7,7 +7,7 @@ int is_logged=0;
 char name1[100];
 char number[100];
 int floor1;
-char date[7+1][1024]={"","Monday","Tuesday","Wenesday","Thursday","Friday","Saturday","Sunday"};
+char date[7+1][1024]={"","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
 char name_list[26+1][10]={"Admin","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 int m;
 int k;
