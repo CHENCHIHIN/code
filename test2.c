@@ -20,7 +20,7 @@ int main(){
 			*douhao='\0';
 			strcpy(key[sum],line);
 			strcpy(value[sum],douhao+1);
-			sum=sum+1;	
+			sum=sum+1;
 		}
 	}
 	while(1){
