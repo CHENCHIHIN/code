@@ -133,12 +133,44 @@ int main(){
             else if(strcmp(zhiling,"Help")==0){
                 help();
             }
+            else if(strcmp(zhiling,"Lock")==0&&strcmp(name1,"Admin")==0){
+                scanf("%s",number);
+                printf("Floor: ");
+                scanf("%d",&floor1);
+                printf("seat: ");
+                scanf("%d%d",&m,&k);
+                if(n[get_day(number)][floor1][m-1][k-1].state!=-1){
+                	n[get_day(number)][floor1][m-1][k-1].state=-1;
+                	strcpy(n[get_day(number)][floor1][m-1][k-1].name,"");
+                	printf("(Lock,OK)\n");
+                	save();
+				}
+				else
+					printf("(The seat has been locked!)\n");
+            }
+            else if(strcmp(zhiling,"Open")==0&&strcmp(name1,"Admin")==0){
+                scanf("%s",number);
+                printf("Floor: ");
+                scanf("%d",&floor1);
+                printf("seat: ");
+                scanf("%d%d",&m,&k);
+                if(n[get_day(number)][floor1][m-1][k-1].state==-1){
+                	n[get_day(number)][floor1][m-1][k-1].state=0;
+                	strcpy(n[get_day(number)][floor1][m-1][k-1].name,"");
+                	printf("(Open,OK)\n");
+                	save();
+				}
+				else
+					printf("(The seat is opening now!)\n");
+            }
             else if(get_day(zhiling)!=-1){
-                printf("Floor ");
+                printf("Floor: ");
                 scanf("%d",&floor1);
                 for(int i=0;i<4;i++){
                     for(int j=0;j<4;j++){
-                        if(strcmp(n[get_day(zhiling)][floor1][i][j].name,name1)==0&&n[get_day(zhiling)][floor1][i][j].state==1)
+                        if(n[get_day(zhiling)][floor1][i][j].state==-1)
+                        	printf("X");
+						else if(strcmp(n[get_day(zhiling)][floor1][i][j].name,name1)==0&&n[get_day(zhiling)][floor1][i][j].state==1)
                             printf("2");
                         else
                             printf("%d",n[get_day(zhiling)][floor1][i][j].state);
@@ -148,11 +180,13 @@ int main(){
             }
             else if(strcmp(zhiling,"Reserve")==0){
                 scanf("%s",number);
-                printf("Floor ");
+                printf("Floor: ");
                 scanf("%d",&floor1);
-                printf("seat ");
+                printf("seat: ");
                 scanf("%d%d",&m,&k);
-                if(n[get_day(number)][floor1][m-1][k-1].state==0) {
+                if(n[get_day(number)][floor1][m-1][k-1].state==-1)
+                	printf("(The seat can't not be reserved!)\n");
+				else if(n[get_day(number)][floor1][m-1][k-1].state==0){
                     n[get_day(number)][floor1][m-1][k-1].state+=2;
                     strcpy(n[get_day(number)][floor1][m-1][k-1].name,name1);
                     printf("OK\n\n");
@@ -167,11 +201,14 @@ int main(){
             }
             else if(strcmp(zhiling,"Cancel")==0&&strcmp(name1,"Admin")==0){
                 scanf("%s",number);
-                printf("Floor ");
+                printf("Floor: ");
                 scanf("%d",&floor1);
-                printf("seat ");
+                printf("seat: ");
                 scanf("%d%d",&m,&k);
-                if(n[get_day(number)][floor1][m-1][k-1].state!=0) {
+                if(n[get_day(number)][floor1][m-1][k-1].state==-1){
+                    printf("(Lock seat can't be cancel! Use:Open)\n");
+                }
+                else if(n[get_day(number)][floor1][m-1][k-1].state!=0){
                     n[get_day(number)][floor1][m-1][k-1].state=0;
                     strcpy(n[get_day(number)][floor1][m-1][k-1].name,"");
                     printf("(OK!Cancel Successful!)\n");
