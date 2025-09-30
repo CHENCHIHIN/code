@@ -46,6 +46,19 @@ void clear(){
     }
 }
 
+void help(){
+    printf("For all user:\n");
+    printf("1.Reserve(Reserve your seat:date floor seat.)\n");
+    printf("2.Exit(Exit the name,but program is here.)\n");
+    printf("3.Quit(Quit the program.)\n");
+    printf("4.Login(Login your name.)\n");
+    printf("5.Monday-Sunday(See the situation on that day:Floor)\n");
+    printf("\n");
+    printf("For Admin:\n");
+    printf("1.Clear(Clear the list.)\n");
+    printf("2.Cancel(Cancel the Reserve:date floor seat.)\n");
+}
+
 int get_day(char a[]){
     for(int i=1;i<=7;i++){
         if(strcmp(a,date[i])==0)
@@ -58,7 +71,7 @@ int main(){
     load();
     while(1){
         if(is_logged!=1){
-            printf("(Please Login Now!)\n");
+            printf("(Please Login Now Or Help!)\n");
             scanf("%s",zhiling); 
             if(strcmp(zhiling,"Login")==0){
                 printf("(Enter Your Name):");
@@ -93,8 +106,11 @@ int main(){
                 save();
                 break; 
             }
+            else if(strcmp(zhiling,"Help")==0){
+                help();
+            }
             else
-                printf("(Please Login Now!)\n"); 
+                printf("(Please Login Now Or Help!)\n"); 
         }
         else{
             scanf("%s",zhiling);
@@ -113,6 +129,9 @@ int main(){
                     }
                 }
             save();
+            }
+            else if(strcmp(zhiling,"Help")==0){
+                help();
             }
             else if(get_day(zhiling)!=-1){
                 printf("Floor ");
