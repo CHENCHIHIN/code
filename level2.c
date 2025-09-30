@@ -178,6 +178,7 @@ int main(){
                     n[get_day(number)][floor1][m-1][k-1].state+=2;
                     strcpy(n[get_day(number)][floor1][m-1][k-1].name,name1);
                     printf("OK\n\n");
+                    save();
                 }
                 else
                     printf("(The seat had been reserved!)\n");
