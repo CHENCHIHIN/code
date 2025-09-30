@@ -61,6 +61,25 @@ void clear1(){
     }
 }
 
+void list(){
+    int list_time=0;
+    for(int i=0;i<=7;i++){
+        for(int j=0;j<=5;j++){
+            for(int b=0;b<4;b++){
+                for(int l=0;l<4;l++){
+                    if(n[i][j][b][l].state!=0&&n[i][j][b][l].state!=-1){
+                        printf("%s reserve %s Floor:%d Seat:%d %d\n",n[i][j][b][l].name,date[i],j,b+1,l+1);
+                        list_time+=1;
+                    }
+                }
+            }
+        }
+    }
+    if(list_time==0)
+        printf("(Empty list!)\n");
+    list_time=0;
+}
+
 void help(){
     printf("For all user:\n");
     printf("1.Reserve(Reserve your seat:date floor seat.)\n");
@@ -74,7 +93,8 @@ void help(){
     printf("2.ClearAll(Clear the list.)\n");
     printf("3.Cancel(Cancel the Reserve:date floor seat.)\n");
     printf("4.Lock(Lock the seat,no one can reserve it.)\n");
-    printf("5.Open(Open the seat,from the lock.)\n\n");
+    printf("5.Open(Open the seat,from the lock.)\n");
+    printf("6.List(Show All User's seat situation.)\n\n");
 }
 
 int get_day(char a[]){
@@ -272,7 +292,10 @@ int main(){
                     	printf("(The seat was empty!)\n");
                 	save();
             	}
-            	else{
+            	else if(strcmp(zhiling,"List")==0){
+                    list();
+                }
+                else{
             		printf("(Error Order!)\n");
                 	continue;
 				}
