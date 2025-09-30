@@ -106,12 +106,12 @@ int get_day(char a[]){
 }
 
 int main(){
-    load();
     while(1){
         if(is_logged!=1){
             printf("(Please Login Now Or Help!)\n");
-            scanf("%s",zhiling); 
+            scanf("%s",zhiling);
             if(strcmp(zhiling,"Login")==0){
+                load();
                 printf("(Enter Your Name):");
                 scanf("%s",name1);
                 jishuqi=0;
@@ -166,12 +166,13 @@ int main(){
                         }
                     }
                 }
-            save();
+                save();
             }
             else if(strcmp(zhiling,"Help")==0){
                 help();
             }
             else if(get_day(zhiling)!=-1){
+                load();
                 printf("Floor: ");
                 scanf("%d",&floor1);
                 for(int i=0;i<4;i++){
@@ -187,6 +188,7 @@ int main(){
                 }
             }
             else if(strcmp(zhiling,"Reserve")==0){
+                load();
                 scanf("%s",number);
                 printf("Floor: ");
                 scanf("%d",&floor1);
@@ -195,7 +197,7 @@ int main(){
                 if(n[get_day(number)][floor1][m-1][k-1].state==-1)
                 	printf("(The seat can't not be reserved!)\n");
 				else if(n[get_day(number)][floor1][m-1][k-1].state==0){
-                    n[get_day(number)][floor1][m-1][k-1].state+=2;
+                    n[get_day(number)][floor1][m-1][k-1].state+=1;
                     strcpy(n[get_day(number)][floor1][m-1][k-1].name,name1);
                     printf("OK\n\n");
                     save();
@@ -204,6 +206,7 @@ int main(){
                     printf("(The seat had been reserved!)\n");
             }
 			else if(strcmp(zhiling,"Reservation")==0){
+                load();
                 int time=0;
                 for(int i=0;i<=7;i++){
                     for(int j=0;j<=5;j++){
@@ -238,7 +241,8 @@ int main(){
             }
             else if(strcmp(name1,"Admin")==0){//admin code
             	if(strcmp(zhiling,"Open")==0){
-                	scanf("%s",number);
+                	load();
+                    scanf("%s",number);
                 	printf("Floor: ");
                 	scanf("%d",&floor1);
                 	printf("seat: ");
@@ -253,7 +257,8 @@ int main(){
 						printf("(The seat is opening now!)\n");
             	}
             	else if(strcmp(zhiling,"Lock")==0){
-                	scanf("%s",number);
+                	load();
+                    scanf("%s",number);
                 	printf("Floor: ");
                 	scanf("%d",&floor1);
                 	printf("seat: ");
@@ -278,7 +283,8 @@ int main(){
                 	save();
             	}
             	else if(strcmp(zhiling,"Cancel")==0){
-                	scanf("%s",number);
+                	load();
+                    scanf("%s",number);
                 	printf("Floor: ");
                 	scanf("%d",&floor1);
                 	printf("seat: ");
@@ -293,6 +299,7 @@ int main(){
                 	save();
             	}
             	else if(strcmp(zhiling,"List")==0){
+                    load();
                     list();
                 }
                 else{
