@@ -38,8 +38,10 @@ void clear(){
         for(int j=0;j<=5;j++){
             for(int b=0;b<4;b++){
                 for(int l=0;l<4;l++){
-                    n[i][j][b][l].state=0;
-                    strcpy(n[i][j][b][l].name,"");
+                    if(n[i][j][b][l].state!=-1){
+                        n[i][j][b][l].state=0;
+                        strcpy(n[i][j][b][l].name,"");
+                    }
                 }
             }
         }
@@ -55,7 +57,7 @@ void help(){
     printf("5.Monday-Sunday(See all the seat situation on that day:Floor)\n");
     printf("6.Reservation(See your Reserve seat's imformation.)\n\n");
     printf("For Admin:\n");
-    printf("1.Clear(Clear the list.)\n");
+    printf("1.Clear(Clear the list.But not 'x')\n");
     printf("2.Cancel(Cancel the Reserve:date floor seat.)\n\n");
 }
 
