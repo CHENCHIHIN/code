@@ -52,11 +52,11 @@ void help(){
     printf("2.Exit(Exit the name,but program is here.)\n");
     printf("3.Quit(Quit the program.)\n");
     printf("4.Login(Login your name.)\n");
-    printf("5.Monday-Sunday(See the situation on that day:Floor)\n");
-    printf("\n");
+    printf("5.Monday-Sunday(See all the seat situation on that day:Floor)\n");
+    printf("6.Reservation(See your Reserve seat's imformation.)\n\n");
     printf("For Admin:\n");
     printf("1.Clear(Clear the list.)\n");
-    printf("2.Cancel(Cancel the Reserve:date floor seat.)\n");
+    printf("2.Cancel(Cancel the Reserve:date floor seat.)\n\n");
 }
 
 int get_day(char a[]){
