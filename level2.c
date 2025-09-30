@@ -161,7 +161,19 @@ int main(){
                     printf("(The seat was empty!)\n");
                 save();
             }
-			else if(strcmp(zhiling,"Quit")==0){
+			else if(strcmp(zhiling,"Reservation")==0){
+                for(int i=0;i<=7;i++){
+                    for(int j=0;j<=5;j++){
+                        for(int b=0;b<4;b++){
+                            for(int l=0;l<4;l++){
+                                if(strcmp(n[i][j][b][l].name,name1)==0&&n[i][j][b][l].state!=0)
+                                    printf("%s Floor:%d seat:%d %d\n",date[i],j,b+1,l);
+                            }
+                        }
+                    }
+                }
+            }
+            else if(strcmp(zhiling,"Quit")==0){
                 printf("(OK!Quit Successful!)\n");
                 for(int i=0;i<=7;i++){
                     for(int j=0;j<=5;j++){
