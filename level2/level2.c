@@ -87,14 +87,14 @@ void help(){
     printf("3.Quit(Quit the program.)\n");
     printf("4.Login(Login your name.)\n");
     printf("5.Monday-Sunday(See all the seat situation on that day:Floor)\n");
-    printf("6.Reservation(See your Reserve seat's imformation.)\n\n");
+    printf("6.Reservation(See your Reserve seat's imformation.)\n");
+    printf("7.Cancel(Cancel the Reserve:date floor seat.)\n\n");
     printf("For Admin:\n");
     printf("1.Clear(Clear the list.But not'x')\n");
     printf("2.ClearAll(Clear the list.)\n");
-    printf("3.Cancel(Cancel the Reserve:date floor seat.)\n");
-    printf("4.Lock(Lock the seat,no one can reserve it.)\n");
-    printf("5.Open(Open the seat,from the lock.)\n");
-    printf("6.List(Show All User's seat situation.)\n\n");
+    printf("3.Lock(Lock the seat,no one can reserve it.)\n");
+    printf("4.Open(Open the seat,from the lock.)\n");
+    printf("5.List(Show All User's seat situation or situation.)\n\n");
 }
 
 int get_day(char a[]){
@@ -131,16 +131,6 @@ int main(){
             }
             else if(strcmp(zhiling,"Quit")==0){
                 printf("(OK! Quit Successful!)\n"); 
-                for(int i=0;i<=7;i++){
-                    for(int j=0;j<=5;j++){
-                        for(int b=0;b<4;b++){
-                            for(int l=0;l<4;l++){
-                                if(n[i][j][b][l].state==2)
-                                    n[i][j][b][l].state=1;
-                            }
-                        }
-                    }
-                }
                 save();
                 break; 
             }
@@ -156,16 +146,6 @@ int main(){
                 printf("(OK! %s Exit successful!)\n\n",name1); 
                 is_logged=0;
                 jishuqi=0;
-                for(int i=0;i<=7;i++){
-                    for(int j=0;j<=5;j++){
-                        for(int b=0;b<4;b++){
-                            for(int l=0;l<4;l++){
-                                if(n[i][j][b][l].state==2)
-                                    n[i][j][b][l].state=1;
-                            }
-                        }
-                    }
-                }
                 save();
             }
             else if(strcmp(zhiling,"Help")==0){
@@ -213,7 +193,7 @@ int main(){
                         for(int b=0;b<4;b++){
                             for(int l=0;l<4;l++){
                                 if(strcmp(n[i][j][b][l].name,name1)==0&&n[i][j][b][l].state!=0){
-                                    printf("%s Floor:%d seat:%d %d\n",date[i],j,b+1,l+1);
+                                    printf("(%s Floor:%d seat:%d %d)\n",date[i],j,b+1,l+1);
                                     time=time+1;
                                 }
                             }
@@ -226,18 +206,31 @@ int main(){
             }
             else if(strcmp(zhiling,"Quit")==0){
                 printf("(OK!Quit Successful!)\n");
-                for(int i=0;i<=7;i++){
-                    for(int j=0;j<=5;j++){
-                        for(int b=0;b<4;b++){
-                            for(int l=0;l<4;l++){
-                                if(n[i][j][b][l].state==2)
-                                    n[i][j][b][l].state=1;
-                            }
-                        }
-                    }
-                }
                 save();
                 break;
+            }
+            else if(strcmp(zhiling,"Cancel")==0){
+                load();
+                scanf("%s",number);
+                printf("Floor: ");
+                scanf("%d",&floor1);
+                printf("seat: ");
+                scanf("%d%d",&m,&k);
+                if(strcmp(name1,"Admin")==0){
+                    n[get_day(number)][floor1][m-1][k-1].state=0;
+                    strcpy(n[get_day(number)][floor1][m-1][k-1].name,"");
+                    printf("(OK!Cancel Successful From Admin!)\n");
+                }
+                else if(n[get_day(number)][floor1][m-1][k-1].state!=0&&strcmp(n[get_day(number)][floor1][m-1][k-1].name,name1)==0){
+                    n[get_day(number)][floor1][m-1][k-1].state=0;
+                    strcpy(n[get_day(number)][floor1][m-1][k-1].name,"");
+                    printf("(OK!Cancel Successful From Yourself!)\n");
+                }
+                else if(n[get_day(number)][floor1][m-1][k-1].state==1&&strcmp(n[get_day(number)][floor1][m-1][k-1].name,name1)!=0)
+                    printf("(You can't cancel other's seat!)\n");
+                else
+                    printf("(The seat was empty!)\n");
+                save();
             }
             else if(strcmp(name1,"Admin")==0){//admin code
             	if(strcmp(zhiling,"Open")==0){
@@ -272,30 +265,14 @@ int main(){
 					else
 						printf("(The seat has been locked!)\n");
             	}
-            	else if(strcmp(zhiling,"Clear")==0){
-                	clear();
-                	printf("(OK!Clear Successful!But not 'x')\n");
-                	save();
-            	}
                 else if(strcmp(zhiling,"ClearAll")==0){
                 	clear1();
                 	printf("(OK!Clear Successful!)\n");
                 	save();
             	}
-            	else if(strcmp(zhiling,"Cancel")==0){
-                	load();
-                    scanf("%s",number);
-                	printf("Floor: ");
-                	scanf("%d",&floor1);
-                	printf("seat: ");
-                	scanf("%d%d",&m,&k);
-                	if(n[get_day(number)][floor1][m-1][k-1].state!=0){
-                    	n[get_day(number)][floor1][m-1][k-1].state=0;
-                    	strcpy(n[get_day(number)][floor1][m-1][k-1].name,"");
-                    	printf("(OK!Cancel Successful!)\n");
-                	}
-                	else
-                    	printf("(The seat was empty!)\n");
+                else if(strcmp(zhiling,"Clear")==0){
+                	clear();
+                	printf("(OK!Clear Successful!But not'X')\n");
                 	save();
             	}
             	else if(strcmp(zhiling,"List")==0){
