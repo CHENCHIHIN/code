@@ -9,6 +9,7 @@ char number[100];
 int floor1;
 char date[7+1][1024]={"","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
 char name_list[26+1][10]={"Admin","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+char dark_list[26+1][10]={0};
 int m,k;
 int hang,lie;
 int jishuqi=0;
@@ -21,9 +22,10 @@ struct edge
 void load(){
     FILE*fp=fopen("level3_data.bin","rb"); //zhidu
     if(fp!=NULL){
-        fread(n,sizeof(struct edge),8*6*(4+hang)*(4+lie),fp);
         fread(&hang,sizeof(int),1,fp);
         fread(&lie,sizeof(int),1,fp);
+        fread(n,sizeof(struct edge),8*6*(4+6)*(4+6),fp);
+        fread(dark_list,sizeof(dark_list),1,fp);
         fclose(fp);
     }
 }
@@ -31,17 +33,18 @@ void load(){
 void save(){
     FILE*fp= fopen("level3_data.bin","wb"); //fugai
     if(fp!=NULL){
-        fwrite(n,sizeof(struct edge),8*6*(4+hang)*(4+lie),fp);
         fwrite(&hang,sizeof(int),1,fp);
         fwrite(&lie,sizeof(int),1,fp);
+        fwrite(n,sizeof(struct edge),8*6*(4+6)*(4+6),fp);
+        fwrite(dark_list,sizeof(dark_list),1,fp);
         fclose(fp);
     }
 }
 void clear(){
 	for(int i=0;i<=7;i++){
         for(int j=0;j<=5;j++){
-            for(int b=0;b<4+hang;b++){
-                for(int l=0;l<4+lie;l++){
+            for(int b=0;b<4+6;b++){
+                for(int l=0;l<4+6;l++){
                     if(n[i][j][b][l].state!=-1){
                         n[i][j][b][l].state=0;
                         strcpy(n[i][j][b][l].name,"");
@@ -55,8 +58,8 @@ void clear(){
 void clear1(){
 	for(int i=0;i<=7;i++){
         for(int j=0;j<=5;j++){
-            for(int b=0;b<4+hang;b++){
-                for(int l=0;l<4+lie;l++){
+            for(int b=0;b<4+6;b++){
+                for(int l=0;l<4+6;l++){
                     n[i][j][b][l].state=0;
                     strcpy(n[i][j][b][l].name,"");
                 }
@@ -65,6 +68,9 @@ void clear1(){
     }
     hang=0;
     lie=0;
+    for(int a=0;a<=26;a++){
+        strcpy(dark_list[a],"");
+    }
 }
 
 void list(){
@@ -79,6 +85,12 @@ void list(){
                     }
                 }
             }
+        }
+    }
+    for(int a=0;a<=26;a++){
+        if(strcmp("",dark_list[a])!=0){
+            printf("%s in the dark_list.\n",dark_list[a]);
+            list_time+=1;
         }
     }
     if(list_time==0)
@@ -114,14 +126,20 @@ int get_day(char a[]){
 }
 
 int main(){
+    load();
     while(1){
         if(is_logged!=1){
             printf("(Please Login Now Or Help!)\n");
             scanf("%s",zhiling);
             if(strcmp(zhiling,"Login")==0){
-                load();
                 printf("(Enter Your Name):");
                 scanf("%s",name1);
+                for(int i=0;i<=26;i++){
+                    if(strcmp(name1,dark_list[i])==0){
+                        printf("(You are in dark_list,you can't Login!)\n");
+                        return 0;
+                    }
+                }
                 jishuqi=0;
                 for(int i=0;i<=26;i++){
                     if(strcmp(name1,name_list[i])==0){
@@ -138,8 +156,7 @@ int main(){
                     printf("(You are not user!)\n");
             }
             else if(strcmp(zhiling,"Quit")==0){
-                printf("(OK! Quit Successful!)\n"); 
-                save();
+                printf("(OK! Quit Successful!)\n");
                 break; 
             }
             else if(strcmp(zhiling,"Help")==0){
@@ -149,7 +166,14 @@ int main(){
                 printf("(Please Login Now Or Help!)\n"); 
         }
         else{
+            load();
             scanf("%s",zhiling);
+            for(int i=0;i<=26;i++){
+                if(strcmp(name1,dark_list[i])==0){
+                    printf("(You are in dark_list,you can't move!)\n");
+                    return 0;
+                }
+            }
             if(strcmp(zhiling,"Exit")==0){
                 printf("(OK! %s Exit successful!)\n\n",name1); 
                 is_logged=0;
@@ -218,7 +242,6 @@ int main(){
             }
             else if(strcmp(zhiling,"Quit")==0){
                 printf("(OK!Quit Successful!)\n");
-                save();
                 break;
             }
             else if(strcmp(zhiling,"Cancel")==0){
@@ -236,17 +259,18 @@ int main(){
                     n[get_day(number)][floor1][m-1][k-1].state=0;
                     strcpy(n[get_day(number)][floor1][m-1][k-1].name,"");
                     printf("(OK!Cancel successful from Admin!)\n");
+                    save();
                 }
                 else if(n[get_day(number)][floor1][m-1][k-1].state!=0&&strcmp(n[get_day(number)][floor1][m-1][k-1].name,name1)==0){
                     n[get_day(number)][floor1][m-1][k-1].state=0;
                     strcpy(n[get_day(number)][floor1][m-1][k-1].name,"");
                     printf("(OK!Cancel successful from yourself!)\n");
+                    save();
                 }
                 else if(n[get_day(number)][floor1][m-1][k-1].state==1&&strcmp(n[get_day(number)][floor1][m-1][k-1].name,name1)!=0)
                     printf("(You can't cancel other's seat!)\n");
                 else
                     printf("(The seat was empty!)\n");
-                save();
             }
             else if(strcmp(name1,"Admin")==0){//admin code
             	if(strcmp(zhiling,"Open")==0){
@@ -261,7 +285,7 @@ int main(){
                     if(strcmp(open,"Hang")==0){
                         printf("Hang:");
                         scanf("%d",&m);
-                        for(int i=0;i<4+hang;i++){
+                        for(int i=0;i<4+lie;i++){
                             n[get_day(number)][floor1][m-1][i].state=0;
                             strcpy(n[get_day(number)][floor1][m-1][i].name,"");
                         }
@@ -270,7 +294,7 @@ int main(){
                     else if(strcmp(open,"Lie")==0){
                         printf("Lie:");
                         scanf("%d",&k);
-                        for(int i=0;i<4+lie;i++){
+                        for(int i=0;i<4+hang;i++){
                             n[get_day(number)][floor1][i][k-1].state=0;
                             strcpy(n[get_day(number)][floor1][i][k-1].name,"");
                         }
@@ -301,7 +325,7 @@ int main(){
                     if(strcmp(lock,"Hang")==0){
                         printf("Hang:");
                         scanf("%d",&m);
-                        for(int i=0;i<4+hang;i++){
+                        for(int i=0;i<4+lie;i++){
                             n[get_day(number)][floor1][m-1][i].state=-1;
                             strcpy(n[get_day(number)][floor1][m-1][i].name,"");
                         }
@@ -310,7 +334,7 @@ int main(){
                     else if(strcmp(lock,"Lie")==0){
                         printf("Lie:");
                         scanf("%d",&k);
-                        for(int i=0;i<4+lie;i++){
+                        for(int i=0;i<4+hang;i++){
                             n[get_day(number)][floor1][i][k-1].state=-1;
                             strcpy(n[get_day(number)][floor1][i][k-1].name,"");
                         }
@@ -339,33 +363,79 @@ int main(){
                 	printf("(OK!Clear Successful!But not 'x','Hang','Lie'.)\n");
                 	save();
             	}
+                else if(strcmp(zhiling,"DarkIn")==0){
+                	char nameIn[100];
+                    int timeIn=0;
+                    printf("Who you what to DarkIN:");
+                    scanf("%s",nameIn);
+                    for(int i=0;i<=26;i++){
+                        if(strcmp(nameIn,name_list[i])==0){
+                            timeIn=timeIn+1;
+                            if(strcmp(nameIn,name_list[0])==0)
+                                printf("(You can't not be DarkIn.)\n");
+                            else{
+                                 strcpy(dark_list[i],nameIn);
+                                 printf("(OK!DarkIn %s Successful.)\n",nameIn);
+                                 save();
+                                 break;
+                            }
+                        }
+                    }
+                    if(timeIn==0)
+                        printf("(This people are not a user!)\n");
+                    timeIn=0;
+            	}
+                else if(strcmp(zhiling,"DarkOut")==0){
+                	char nameOut[100];
+                    int timeOut=0;
+                    printf("Who you what to DarkOut:");
+                    scanf("%s",nameOut);
+                    for(int i=0;i<=26;i++){
+                        if(strcmp(nameOut,dark_list[i])==0){
+                            timeOut=timeOut+1;
+                            strcpy(dark_list[i],"");
+                            printf("(OK!DarkOut %s Successful.)\n",nameOut);
+                            save();
+                            break;
+                        }
+                    }
+                    if(timeOut==0)
+                        printf("(This people are not a user!)\n");
+                    timeOut=0;
+            	}
                 else if(strcmp(zhiling,"ChangeHang")==0){
                 	load();
-                    printf("Change The 'Hang':");
-                    scanf("%d",&hang);
-                    if(4+hang>10){
+                    printf("Change The 'Hang':4+");
+                    int temp1;
+                    scanf("%d",&temp1);
+                    if(4+temp1>10){
                         printf("(That scale is too big(>10))\n");
                     }
-                    else if(4+hang<=0){
+                    else if(4+temp1<=0){
                         printf("(That scale is too small(<=0))\n");
                     }
-                	else
+                	else{
+                        hang=temp1;
                         printf("(OK!'Hang' max is %d now!)\n",4+hang);
                         save();
+                    }
             	}
                 else if(strcmp(zhiling,"ChangeLie")==0){
                 	load();
-                    printf("Change The 'Lie':");
-                    scanf("%d",&lie);
-                    if(4+lie>10){
+                    printf("Change The 'Lie':4+");
+                    int temp2;
+                    scanf("%d",&temp2);
+                    if(4+temp2>10){
                         printf("(That scale is too big(>10))\n");
                     }
-                    else if(4+lie<=0){
+                    else if(4+temp2<=0){
                         printf("(That scale is too small(<=0))\n");
                     }
-                	else
+                	else{
+                        lie=temp2;
                         printf("(OK!'Lie' max is %d now!)\n",4+lie);
                         save();
+                    }
             	}
             	else if(strcmp(zhiling,"List")==0){
                     load();
