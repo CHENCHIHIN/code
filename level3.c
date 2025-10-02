@@ -9,19 +9,21 @@ char number[100];
 int floor1;
 char date[7+1][1024]={"","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
 char name_list[26+1][10]={"Admin","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
-int m;
-int k;
+int m,k;
+int hang,lie;
 int jishuqi=0;
 struct edge
 {
     char name[10];
     int state;
-}n[7+1][5+1][4][4]; 
+}n[7+1][5+1][4+6][4+6];
 
 void load(){
     FILE*fp=fopen("level3_data.bin", "rb"); //zhidu
     if(fp!=NULL){
         fread(n,sizeof(struct edge), 8*6*4*4, fp);
+        fread(&hang,sizeof(int),1,fp);
+        fread(&lie,sizeof(int),1,fp);
         fclose(fp);
     }
 }
@@ -30,14 +32,16 @@ void save(){
     FILE*fp= fopen("level3_data.bin", "wb"); //fugai
     if(fp!=NULL){
         fwrite(n,sizeof(struct edge), 8*6*4*4, fp);
+        fwrite(&hang,sizeof(int),1,fp);
+        fwrite(&lie,sizeof(int),1,fp);
         fclose(fp);
     }
 }
 void clear(){
 	for(int i=0;i<=7;i++){
         for(int j=0;j<=5;j++){
-            for(int b=0;b<4;b++){
-                for(int l=0;l<4;l++){
+            for(int b=0;b<4+hang;b++){
+                for(int l=0;l<4+lie;l++){
                     if(n[i][j][b][l].state!=-1){
                         n[i][j][b][l].state=0;
                         strcpy(n[i][j][b][l].name,"");
@@ -51,22 +55,24 @@ void clear(){
 void clear1(){
 	for(int i=0;i<=7;i++){
         for(int j=0;j<=5;j++){
-            for(int b=0;b<4;b++){
-                for(int l=0;l<4;l++){
+            for(int b=0;b<4+hang;b++){
+                for(int l=0;l<4+lie;l++){
                     n[i][j][b][l].state=0;
                     strcpy(n[i][j][b][l].name,"");
                 }
             }
         }
     }
+    hang=0;
+    lie=0;
 }
 
 void list(){
     int list_time=0;
     for(int i=0;i<=7;i++){
         for(int j=0;j<=5;j++){
-            for(int b=0;b<4;b++){
-                for(int l=0;l<4;l++){
+            for(int b=0;b<4+hang;b++){
+                for(int l=0;l<4+lie;l++){
                     if(n[i][j][b][l].state!=0&&n[i][j][b][l].state!=-1){
                         printf("%s reserve %s Floor:%d Seat:%d %d\n",n[i][j][b][l].name,date[i],j,b+1,l+1);
                         list_time+=1;
@@ -90,11 +96,13 @@ void help(){
     printf("6.Reservation(See your Reserve seat's imformation.)\n");
     printf("7.Cancel(Cancel the Reserve:date floor seat.)\n\n");
     printf("For Admin:\n");
-    printf("1.Clear(Clear the list.But not'x')\n");
+    printf("1.Clear(Clear the list.But not 'x','Hang','Lie'.)\n");
     printf("2.ClearAll(Clear the list.)\n");
     printf("3.Lock(Lock the seat,no one can reserve it.)\n");
     printf("4.Open(Open the seat,from the lock.)\n");
-    printf("5.List(Show All User's seat situation or situation.)\n\n");
+    printf("5.List(Show All User's seat situation or situation.)\n");
+    printf("6.ChangeHang(Chang the 'Hang' in the list)\n");
+    printf("7.ChangeLie(Chang the 'Lie' in the list)\n\n");
 }
 
 int get_day(char a[]){
@@ -155,8 +163,8 @@ int main(){
                 load();
                 printf("Floor: ");
                 scanf("%d",&floor1);
-                for(int i=0;i<4;i++){
-                    for(int j=0;j<4;j++){
+                for(int i=0;i<4+hang;i++){
+                    for(int j=0;j<4+lie;j++){
                         if(n[get_day(zhiling)][floor1][i][j].state==-1)
                         	printf("X");
 						else if(strcmp(n[get_day(zhiling)][floor1][i][j].name,name1)==0&&n[get_day(zhiling)][floor1][i][j].state==1)
@@ -176,6 +184,9 @@ int main(){
                 scanf("%d%d",&m,&k);
                 if(n[get_day(number)][floor1][m-1][k-1].state==-1)
                 	printf("(The seat can't not be reserved!)\n");
+                else if(m-1>=4+hang||k-1>=4+lie){
+                    printf("(The seat's location is illegal!)\n");
+                }
 				else if(n[get_day(number)][floor1][m-1][k-1].state==0){
                     n[get_day(number)][floor1][m-1][k-1].state+=1;
                     strcpy(n[get_day(number)][floor1][m-1][k-1].name,name1);
@@ -190,8 +201,8 @@ int main(){
                 int time=0;
                 for(int i=0;i<=7;i++){
                     for(int j=0;j<=5;j++){
-                        for(int b=0;b<4;b++){
-                            for(int l=0;l<4;l++){
+                        for(int b=0;b<4+hang;b++){
+                            for(int l=0;l<4+lie;l++){
                                 if(strcmp(n[i][j][b][l].name,name1)==0&&n[i][j][b][l].state!=0){
                                     printf("(%s Floor:%d seat:%d %d)\n",date[i],j,b+1,l+1);
                                     time=time+1;
@@ -220,6 +231,9 @@ int main(){
                     n[get_day(number)][floor1][m-1][k-1].state=0;
                     strcpy(n[get_day(number)][floor1][m-1][k-1].name,"");
                     printf("(OK!Cancel Successful From Admin!)\n");
+                }
+                else if(m-1>4+hang||k-1>4+lie){
+                    printf("(The seat's location is illegal!)\n");
                 }
                 else if(n[get_day(number)][floor1][m-1][k-1].state!=0&&strcmp(n[get_day(number)][floor1][m-1][k-1].name,name1)==0){
                     n[get_day(number)][floor1][m-1][k-1].state=0;
@@ -274,6 +288,34 @@ int main(){
                 	clear();
                 	printf("(OK!Clear Successful!But not'X')\n");
                 	save();
+            	}
+                else if(strcmp(zhiling,"ChangeHang")==0){
+                	load();
+                    printf("(Change The 'Hang')\n");
+                    scanf("%d",&hang);
+                    if(4+hang>10){
+                        printf("(That scale is too big(>10))\n");
+                    }
+                    else if(4+hang<=0){
+                        printf("(That scale is too small(<=0))\n");
+                    }
+                	else
+                        printf("(OK!'Hang' is add to %d)\n",4+hang);
+                        save();
+            	}
+                else if(strcmp(zhiling,"ChangeLie")==0){
+                	load();
+                    printf("(Change The 'Lie')\n");
+                    scanf("%d",&lie);
+                    if(4+lie>10){
+                        printf("(That scale is too big(>10))\n");
+                    }
+                    else if(4+lie<=0){
+                        printf("(That scale is too small(<=0))\n");
+                    }
+                	else
+                        printf("(OK!'Lie' is add to %d)\n",4+lie);
+                        save();
             	}
             	else if(strcmp(zhiling,"List")==0){
                     load();
