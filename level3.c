@@ -134,6 +134,7 @@ int main(){
             if(strcmp(zhiling,"Login")==0){
                 printf("(Enter Your Name):");
                 scanf("%s",name1);
+                load();
                 for(int i=0;i<=26;i++){
                     if(strcmp(name1,dark_list[i])==0){
                         printf("(You are in dark_list,you can't Login!)\n");
@@ -166,7 +167,6 @@ int main(){
                 printf("(Please Login Now Or Help!)\n"); 
         }
         else{
-            load();
             scanf("%s",zhiling);
             for(int i=0;i<=26;i++){
                 if(strcmp(name1,dark_list[i])==0){
@@ -354,17 +354,20 @@ int main(){
                     save();
             	}
                 else if(strcmp(zhiling,"ClearAll")==0){
-                	clear1();
+                	load();
+                    clear1();
                 	printf("(OK!Clear Successful!)\n");
                 	save();
             	}
                 else if(strcmp(zhiling,"Clear")==0){
-                	clear();
+                	load();
+                    clear();
                 	printf("(OK!Clear Successful!But not 'x','Hang','Lie'.)\n");
                 	save();
             	}
                 else if(strcmp(zhiling,"DarkIn")==0){
-                	char nameIn[100];
+                	load();
+                    char nameIn[100];
                     int timeIn=0;
                     printf("Who you what to DarkIN:");
                     scanf("%s",nameIn);
@@ -386,7 +389,8 @@ int main(){
                     timeIn=0;
             	}
                 else if(strcmp(zhiling,"DarkOut")==0){
-                	char nameOut[100];
+                	load();
+                    char nameOut[100];
                     int timeOut=0;
                     printf("Who you what to DarkOut:");
                     scanf("%s",nameOut);
