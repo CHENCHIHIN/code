@@ -167,6 +167,7 @@ int main(){
                 printf("(Please Login Now Or Help!)\n"); 
         }
         else{
+            load();
             scanf("%s",zhiling);
             for(int i=0;i<=26;i++){
                 if(strcmp(name1,dark_list[i])==0){
