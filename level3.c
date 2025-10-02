@@ -19,9 +19,9 @@ struct edge
 }n[7+1][5+1][4+6][4+6];
 
 void load(){
-    FILE*fp=fopen("level3_data.bin", "rb"); //zhidu
+    FILE*fp=fopen("level3_data.bin","rb"); //zhidu
     if(fp!=NULL){
-        fread(n,sizeof(struct edge), 8*6*4*4, fp);
+        fread(n,sizeof(struct edge),8*6*(4+hang)*(4+lie),fp);
         fread(&hang,sizeof(int),1,fp);
         fread(&lie,sizeof(int),1,fp);
         fclose(fp);
@@ -29,9 +29,9 @@ void load(){
 }
 
 void save(){
-    FILE*fp= fopen("level3_data.bin", "wb"); //fugai
+    FILE*fp= fopen("level3_data.bin","wb"); //fugai
     if(fp!=NULL){
-        fwrite(n,sizeof(struct edge), 8*6*4*4, fp);
+        fwrite(n,sizeof(struct edge),8*6*(4+hang)*(4+lie),fp);
         fwrite(&hang,sizeof(int),1,fp);
         fwrite(&lie,sizeof(int),1,fp);
         fclose(fp);
@@ -98,8 +98,8 @@ void help(){
     printf("For Admin:\n");
     printf("1.Clear(Clear the list.But not 'x','Hang','Lie'.)\n");
     printf("2.ClearAll(Clear the list.)\n");
-    printf("3.Lock(Lock the seat,no one can reserve it.)\n");
-    printf("4.Open(Open the seat,from the lock.)\n");
+    printf("3.Lock(Lock the seat(s),no one can reserve it.)\n");
+    printf("4.Open(Open the seat(s),from the lock.)\n");
     printf("5.List(Show All User's seat situation or situation.)\n");
     printf("6.ChangeHang(Chang the 'Hang' in the list)\n");
     printf("7.ChangeLie(Chang the 'Lie' in the list)\n\n");
@@ -177,16 +177,17 @@ int main(){
             }
             else if(strcmp(zhiling,"Reserve")==0){
                 load();
+                printf("Date:");
                 scanf("%s",number);
                 printf("Floor: ");
                 scanf("%d",&floor1);
                 printf("seat: ");
                 scanf("%d%d",&m,&k);
-                if(n[get_day(number)][floor1][m-1][k-1].state==-1)
-                	printf("(The seat can't not be reserved!)\n");
-                else if(m-1>=4+hang||k-1>=4+lie){
+                if(m-1>=4+hang||k-1>=4+lie){
                     printf("(The seat's location is illegal!)\n");
                 }
+                else if(n[get_day(number)][floor1][m-1][k-1].state==-1)
+                	printf("(The seat has be Lock now!Can not Reserve.)\n");
 				else if(n[get_day(number)][floor1][m-1][k-1].state==0){
                     n[get_day(number)][floor1][m-1][k-1].state+=1;
                     strcpy(n[get_day(number)][floor1][m-1][k-1].name,name1);
@@ -222,23 +223,24 @@ int main(){
             }
             else if(strcmp(zhiling,"Cancel")==0){
                 load();
+                printf("Date:");
                 scanf("%s",number);
                 printf("Floor: ");
                 scanf("%d",&floor1);
                 printf("seat: ");
                 scanf("%d%d",&m,&k);
-                if(strcmp(name1,"Admin")==0){
+                if(m-1>=4+hang||k-1>=4+lie){
+                    printf("(The seat's location is illegal!)\n");
+                }
+                else if(strcmp(name1,"Admin")==0){
                     n[get_day(number)][floor1][m-1][k-1].state=0;
                     strcpy(n[get_day(number)][floor1][m-1][k-1].name,"");
-                    printf("(OK!Cancel Successful From Admin!)\n");
-                }
-                else if(m-1>4+hang||k-1>4+lie){
-                    printf("(The seat's location is illegal!)\n");
+                    printf("(OK!Cancel successful from Admin!)\n");
                 }
                 else if(n[get_day(number)][floor1][m-1][k-1].state!=0&&strcmp(n[get_day(number)][floor1][m-1][k-1].name,name1)==0){
                     n[get_day(number)][floor1][m-1][k-1].state=0;
                     strcpy(n[get_day(number)][floor1][m-1][k-1].name,"");
-                    printf("(OK!Cancel Successful From Yourself!)\n");
+                    printf("(OK!Cancel successful from yourself!)\n");
                 }
                 else if(n[get_day(number)][floor1][m-1][k-1].state==1&&strcmp(n[get_day(number)][floor1][m-1][k-1].name,name1)!=0)
                     printf("(You can't cancel other's seat!)\n");
@@ -248,36 +250,84 @@ int main(){
             }
             else if(strcmp(name1,"Admin")==0){//admin code
             	if(strcmp(zhiling,"Open")==0){
-                	load();
+                	char open[100];
+                    load();
+                    printf("Date:");
                     scanf("%s",number);
                 	printf("Floor: ");
                 	scanf("%d",&floor1);
-                	printf("seat: ");
-                	scanf("%d%d",&m,&k);
-                	if(n[get_day(number)][floor1][m-1][k-1].state==-1){
-                		n[get_day(number)][floor1][m-1][k-1].state=0;
-                		strcpy(n[get_day(number)][floor1][m-1][k-1].name,"");
-                		printf("(Open,OK)\n");
-                		save();
-					}
-					else
-						printf("(The seat is opening now!)\n");
+                	printf("Hang,Lie,One?");
+                    scanf("%s",open);
+                    if(strcmp(open,"Hang")==0){
+                        printf("Hang:");
+                        scanf("%d",&m);
+                        for(int i=0;i<4+hang;i++){
+                            n[get_day(number)][floor1][m-1][i].state=0;
+                            strcpy(n[get_day(number)][floor1][m-1][i].name,"");
+                        }
+                        printf("(Open'Hang',OK)\n");
+                    }
+                    else if(strcmp(open,"Lie")==0){
+                        printf("Lie:");
+                        scanf("%d",&k);
+                        for(int i=0;i<4+lie;i++){
+                            n[get_day(number)][floor1][i][k-1].state=0;
+                            strcpy(n[get_day(number)][floor1][i][k-1].name,"");
+                        }
+                        printf("(Open'Lie',OK)\n");
+                    }
+                    else{
+                        printf("seat: ");
+                	    scanf("%d%d",&m,&k);
+                	    if(n[get_day(number)][floor1][m-1][k-1].state==-1){
+                		    n[get_day(number)][floor1][m-1][k-1].state=0;
+                		    strcpy(n[get_day(number)][floor1][m-1][k-1].name,"");
+                		    printf("(Open'One',OK)\n");
+					    }
+					    else
+						    printf("(The seat is opening now!)\n");
+                    }
+                    save();
             	}
             	else if(strcmp(zhiling,"Lock")==0){
-                	load();
+                	char lock[100];
+                    load();
+                    printf("Date:");
                     scanf("%s",number);
                 	printf("Floor: ");
                 	scanf("%d",&floor1);
-                	printf("seat: ");
-                	scanf("%d%d",&m,&k);
-                	if(n[get_day(number)][floor1][m-1][k-1].state!=-1){
-                		n[get_day(number)][floor1][m-1][k-1].state=-1;
-                		strcpy(n[get_day(number)][floor1][m-1][k-1].name,"");
-                		printf("(Lock,OK)\n");
-                		save();
-					}
-					else
-						printf("(The seat has been locked!)\n");
+                	printf("Hang,Lie,One?\n");
+                    scanf("%s",lock);
+                    if(strcmp(lock,"Hang")==0){
+                        printf("Hang:");
+                        scanf("%d",&m);
+                        for(int i=0;i<4+hang;i++){
+                            n[get_day(number)][floor1][m-1][i].state=-1;
+                            strcpy(n[get_day(number)][floor1][m-1][i].name,"");
+                        }
+                        printf("(Lock'Hang',OK)\n");
+                    }
+                    else if(strcmp(lock,"Lie")==0){
+                        printf("Lie:");
+                        scanf("%d",&k);
+                        for(int i=0;i<4+lie;i++){
+                            n[get_day(number)][floor1][i][k-1].state=-1;
+                            strcpy(n[get_day(number)][floor1][i][k-1].name,"");
+                        }
+                        printf("(Lock'Lie',OK)\n");
+                    }
+                    else{
+                        printf("seat: ");
+                	    scanf("%d%d",&m,&k);
+                	    if(n[get_day(number)][floor1][m-1][k-1].state!=-1){
+                		    n[get_day(number)][floor1][m-1][k-1].state=-1;
+                		    strcpy(n[get_day(number)][floor1][m-1][k-1].name,"");
+                		    printf("(Lock'One',OK)\n");
+					    }
+					    else
+						    printf("(The seat has been locked!)\n");
+                    }
+                    save();
             	}
                 else if(strcmp(zhiling,"ClearAll")==0){
                 	clear1();
@@ -286,12 +336,12 @@ int main(){
             	}
                 else if(strcmp(zhiling,"Clear")==0){
                 	clear();
-                	printf("(OK!Clear Successful!But not'X')\n");
+                	printf("(OK!Clear Successful!But not 'x','Hang','Lie'.)\n");
                 	save();
             	}
                 else if(strcmp(zhiling,"ChangeHang")==0){
                 	load();
-                    printf("(Change The 'Hang')\n");
+                    printf("Change The 'Hang':");
                     scanf("%d",&hang);
                     if(4+hang>10){
                         printf("(That scale is too big(>10))\n");
@@ -300,12 +350,12 @@ int main(){
                         printf("(That scale is too small(<=0))\n");
                     }
                 	else
-                        printf("(OK!'Hang' is add to %d)\n",4+hang);
+                        printf("(OK!'Hang' max is %d now!)\n",4+hang);
                         save();
             	}
                 else if(strcmp(zhiling,"ChangeLie")==0){
                 	load();
-                    printf("(Change The 'Lie')\n");
+                    printf("Change The 'Lie':");
                     scanf("%d",&lie);
                     if(4+lie>10){
                         printf("(That scale is too big(>10))\n");
@@ -314,7 +364,7 @@ int main(){
                         printf("(That scale is too small(<=0))\n");
                     }
                 	else
-                        printf("(OK!'Lie' is add to %d)\n",4+lie);
+                        printf("(OK!'Lie' max is %d now!)\n",4+lie);
                         save();
             	}
             	else if(strcmp(zhiling,"List")==0){
