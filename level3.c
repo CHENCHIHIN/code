@@ -114,7 +114,9 @@ void help(){
     printf("4.Open(Open the seat(s),from the lock.)\n");
     printf("5.List(Show All User's seat situation or situation.)\n");
     printf("6.ChangeHang(Chang the 'Hang' in the list)\n");
-    printf("7.ChangeLie(Chang the 'Lie' in the list)\n\n");
+    printf("7.ChangeLie(Chang the 'Lie' in the list)\n");
+    printf("8.DarkIn(Put user in the dark_list in.)\n");
+    printf("9.DarkOut(Put user in the dark_list out.)\n\n");
 }
 
 int get_day(char a[]){
@@ -140,6 +142,8 @@ int main(){
                         printf("(You are in dark_list,you can't Login!)\n");
                         return 0;
                     }
+                    else    
+                        continue;
                 }
                 jishuqi=0;
                 for(int i=0;i<=26;i++){
@@ -169,11 +173,14 @@ int main(){
         else{
             load();
             scanf("%s",zhiling);
+            load();
             for(int i=0;i<=26;i++){
                 if(strcmp(name1,dark_list[i])==0){
                     printf("(You are in dark_list,you can't move!)\n");
                     return 0;
                 }
+                else
+                    continue;
             }
             if(strcmp(zhiling,"Exit")==0){
                 printf("(OK! %s Exit successful!)\n\n",name1); 
